@@ -63,6 +63,11 @@ public:
         iterator() : current(nullptr) {}
         iterator(node* n) : current(n) {}
         
+        // Getter for current node (needed by list class)
+        node* get_node() const {
+            return current;
+        }
+        
         iterator operator++(int) {
             iterator old = *this;
             ++(*this);
@@ -247,12 +252,20 @@ public:
         return iterator(head->next);
     }
     
+    const_iterator begin() const {
+        return cbegin();
+    }
+    
     const_iterator cbegin() const {
         return const_iterator(head->next);
     }
     
     iterator end() {
         return iterator(tail);
+    }
+    
+    const_iterator end() const {
+        return cend();
     }
     
     const_iterator cend() const {
@@ -273,7 +286,7 @@ public:
     }
     
     iterator insert(iterator pos, const T& value) {
-        node* pos_node = pos.current;
+        node* pos_node = pos.get_node();
         if (!pos_node) {
             throw std::runtime_error("Invalid iterator");
         }
@@ -289,11 +302,11 @@ public:
     }
     
     iterator erase(iterator pos) {
-        if (empty() || !pos.current || pos.current == tail) {
+        if (empty() || !pos.get_node() || pos.get_node() == tail) {
             throw std::runtime_error("Invalid iterator");
         }
         
-        node* pos_node = pos.current;
+        node* pos_node = pos.get_node();
         node* next_node = pos_node->next;
         
         pos_node->prev->next = pos_node->next;
